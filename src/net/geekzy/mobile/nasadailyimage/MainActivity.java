@@ -10,6 +10,7 @@ import net.geekzy.mobile.sax.IotdHandler;
 import net.geekzy.mobile.sax.IotdHandlerListener;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.app.WallpaperManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Main Activity of Nasa Daily Image
@@ -32,7 +34,10 @@ public class MainActivity extends Activity implements IotdHandlerListener {
 	protected ImageView imageDisplay;
 	protected TextView imageDesc;
 	protected ProgressDialog dlgLoad;
-	protected Handler handler;
+	protected Bitmap nasaImg;
+
+	// create the UI handler thread to update from proc thread
+	protected Handler handler = new Handler();
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -49,8 +54,6 @@ public class MainActivity extends Activity implements IotdHandlerListener {
 		imageDisplay = (ImageView) findViewById(R.id.imageDisplay);
 		imageDesc = (TextView) findViewById(R.id.imageDesc);
 
-		// create the UI handler thread to update from proc thread
-		handler = new Handler();
 		// refresh initially
 		refreshFeed();
 	}
@@ -104,12 +107,12 @@ public class MainActivity extends Activity implements IotdHandlerListener {
 			@Override
 			public void run() {
 				// save it as bitmap
-				final Bitmap bm = getImageDisplay(imageUrl);
+				nasaImg = getImageDisplay(imageUrl);
 				// update the image placeholder
 				handler.post(new Runnable() {
 					@Override
 					public void run() {
-						imageDisplay.setImageBitmap(bm);
+						imageDisplay.setImageBitmap(nasaImg);
 						imageDisplay.setContentDescription(title);
 						// dismiss the loading dialog once the image is loaded
 						dlgLoad.dismiss();
@@ -157,10 +160,30 @@ public class MainActivity extends Activity implements IotdHandlerListener {
 
 	/**
 	 * Callback when button refresh is clicked
-	 * @param view the object of the clicked source
+	 * to refresh the image of the day feed
+	 * @param view the button as the source of click
 	 */
 	public void onRefresh(View view) {
 		refreshFeed(); // refresh the image of the day
+	}
+
+	/**
+	 * Callback when button set wallpaper is clicked
+	 * to set current image as wallpaper
+	 * @param view the button as the source of click
+	 */
+	public void onSetWallpaper(View view) {
+		final String nottyWallpaperSetOk = getString(R.string.notty_wallpaper_set_ok);
+		final String nottyWallpaperSetFailed = getString(R.string.notty_wallpaper_set_failed);
+		try {
+
+			WallpaperManager wm = WallpaperManager.getInstance(this);
+			wm.setBitmap(nasaImg);
+			Toast.makeText(MainActivity.this, nottyWallpaperSetOk, Toast.LENGTH_SHORT).show();
+
+		} catch (IOException ignored) {
+			Toast.makeText(MainActivity.this, nottyWallpaperSetFailed, Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	/* (non-Javadoc)
@@ -170,6 +193,7 @@ public class MainActivity extends Activity implements IotdHandlerListener {
 	public void iotdParsed(final String url, final String title,
 			final String description, final String date) {
 
+		// update UI
 		handler.post(new Runnable() {
 			@Override
 			public void run() {

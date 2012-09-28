@@ -7,4 +7,7 @@
     <string name="btn_refresh">Refresh</string>
     <string name="dlg_load_title">Loading</string>
     <string name="dlg_load_msg">Loading the image of the Day</string>
+    <string name="btn_set_wallpaper">Set Wallpaper</string>
+    <string name="notty_wallpaper_set_ok">Successfully set as Wallpaper</string>
+    <string name="notty_wallpaper_set_failed">Failed to set as Wallpaper</string>
 </resources>

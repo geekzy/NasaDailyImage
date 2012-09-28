@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content" />
         </LinearLayout>
     </ScrollView>
-
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -46,14 +46,22 @@
         android:layout_weight="0"
         android:background="#ffdddddd"
         android:gravity="center"
+        android:orientation="horizontal"
         android:padding="5dp" >
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="onRefresh"
             android:text="@string/btn_refresh"
-            android:textColor="#000"
-            android:onClick="onRefresh" />
+            android:textColor="#000" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onSetWallpaper"
+            android:text="@string/btn_set_wallpaper"
+            android:textColor="#000" />
     </LinearLayout>
 
 </LinearLayout>
