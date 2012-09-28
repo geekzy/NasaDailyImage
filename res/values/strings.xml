@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">NASA Daily Image</string>
+    <string name="test_image_title">Angling Saturn</string>
+    <string name="test_image_date">Mon, 27 Dec 2010 00:00:00 EST</string>
+    <string name="test_image_desc">The Cassini spacecraft takes an angled view toward Saturn, showing the southern reaches of the planet with the rings on a dramatic diagonal. North on Saturn is up and rotated 16 degrees to the left. This view looks toward the southern, unilluminated side of the rings from about 14 degrees below the ringplane. The rings cast wide shadows on the planet\'s southern hemisphere. The moon Enceladus (313 miles, or 504 kilometers across) appears as a small, bright speck in the lower left of the image. The image was taken with the Cassini spacecraft wide-angle camera on June 15, 2012 using a spectral filter sensitive to wavelengths of near-infrared light centered at 752 nanometers. The view was obtained at a distance of approximately 1.8 million miles (2.9 million kilometers) from Saturn and at a Sun-Saturn-spacecraft, or phase, angle of 72 degrees. Image scale is 11 miles (17 kilometers) per pixel. The Cassini-Huygens mission is a cooperative project of NASA, the European Space Agency and the Italian Space Agency. The Jet Propulsion Laboratory, a division of the California Institute of Technology in Pasadena, manages the mission for NASA\'s Science Mission Directorate, Washington, D.C. The Cassini orbiter and its two onboard cameras were designed, developed and assembled at JPL. The imaging operations center is based at the Space Science Institute in Boulder, Colo. Image credit: NASA/JPL-Caltech/Space Science Institute</string>
+    <string name="img_display_desc">Image Desc</string>
+    <string name="btn_refresh">Refresh</string>
+    <string name="dlg_load_title">Loading</string>
+    <string name="dlg_load_msg">Loading the image of the Day</string>
+</resources>
