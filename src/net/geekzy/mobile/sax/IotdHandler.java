@@ -18,11 +18,14 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import android.util.Log;
 
+import com.googlecode.androidannotations.annotations.EBean;
+
 /**
  * IotdHandler This handler will collect the Image Of The Day
  * 
  * @author Geroen Joris - http://www.headfirstandroid.com/
  */
+@EBean
 public class IotdHandler extends DefaultHandler {
 	private static final String TAG = IotdHandler.class.getSimpleName();
 

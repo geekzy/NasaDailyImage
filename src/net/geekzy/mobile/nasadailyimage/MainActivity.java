@@ -13,7 +13,6 @@ import android.app.ProgressDialog;
 import android.app.WallpaperManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
@@ -21,53 +20,70 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.googlecode.androidannotations.annotations.AfterInject;
+import com.googlecode.androidannotations.annotations.AfterViews;
+import com.googlecode.androidannotations.annotations.Bean;
+import com.googlecode.androidannotations.annotations.EActivity;
+import com.googlecode.androidannotations.annotations.NoTitle;
+import com.googlecode.androidannotations.annotations.ViewById;
+import com.googlecode.androidannotations.annotations.res.StringRes;
+
 /**
  * Main Activity of Nasa Daily Image
  * @author imam
  */
+@NoTitle
+@EActivity(R.layout.main)
 public class MainActivity extends Activity implements IotdHandlerListener {
 	protected final String NASA_FEED_URI = "http://www.nasa.gov/rss/image_of_the_day.rss";
 
+	@ViewById(R.id.main_layout)
 	protected LinearLayout mainLayout;
+	@ViewById(R.id.imageTitle)
 	protected TextView imageTitle;
+	@ViewById(R.id.imageDate)
 	protected TextView imageDate;
+	@ViewById(R.id.imageDisplay)
 	protected ImageView imageDisplay;
+	@ViewById(R.id.imageDesc)
 	protected TextView imageDesc;
+
 	protected ProgressDialog dlgLoad;
 	protected Bitmap nasaImg;
+
+	// get loading dialog messages
+	@StringRes(R.string.dlg_load_title)
+	protected String dlgLoadTitle;
+	@StringRes(R.string.dlg_load_msg)
+	protected String dlgLoadMsg;
+
+	@StringRes(R.string.notty_wallpaper_set_ok)
+	protected String nottyWallpaperSetOk;
+	@StringRes(R.string.notty_wallpaper_set_failed)
+	protected String nottyWallpaperSetFailed;
+
+	@Bean /* create the rss parser */
+	protected IotdHandler iotdHandler;
 
 	// create the UI handler thread to update from proc thread
 	protected Handler handler = new Handler();
 
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onCreate(android.os.Bundle)
-	 */
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
-
-		// Connect interface elements to properties
-		mainLayout = (LinearLayout) findViewById(R.id.main_layout);
-		imageTitle = (TextView) findViewById(R.id.imageTitle);
-		imageDate = (TextView) findViewById(R.id.imageDate);
-		imageDisplay = (ImageView) findViewById(R.id.imageDisplay);
-		imageDesc = (TextView) findViewById(R.id.imageDesc);
-
+	@AfterViews
+	public void initView() {
 		// refresh initially
 		refreshFeed();
+	}
+
+	@AfterInject
+	public void initHandler() {
+		// set the listener
+		iotdHandler.setListener(this);
 	}
 
 	/**
 	 * Refresh the feed by loading the rss URL, parse the result and display it.
 	 */
 	private void refreshFeed() {
-		// get iotdHandler listener reference
-		final IotdHandlerListener iotdListener = this;
-
-		// get loading dialog messages
-		final String dlgLoadTitle = getString(R.string.dlg_load_title);
-		final String dlgLoadMsg = getString(R.string.dlg_load_msg);
 		// show loading on intiail refresh
 		dlgLoad = ProgressDialog.show(this, dlgLoadTitle, dlgLoadMsg);
 
@@ -76,13 +92,8 @@ public class MainActivity extends Activity implements IotdHandlerListener {
 			@Override
 			public void run() {
 				try {
-
-					// create the rss parser
-					IotdHandler handler = new IotdHandler();
-					// set the listener
-					handler.setListener(iotdListener);
 					// start processing rss feed
-					handler.processFeed(new URL(NASA_FEED_URI));
+					iotdHandler.processFeed(new URL(NASA_FEED_URI));
 
 				} catch (Exception ignored) {
 					// dismiss loading dialog on exception
@@ -173,8 +184,6 @@ public class MainActivity extends Activity implements IotdHandlerListener {
 	 * @param view the button as the source of click
 	 */
 	public void onSetWallpaper(View view) {
-		final String nottyWallpaperSetOk = getString(R.string.notty_wallpaper_set_ok);
-		final String nottyWallpaperSetFailed = getString(R.string.notty_wallpaper_set_failed);
 		try {
 
 			WallpaperManager wm = WallpaperManager.getInstance(this);
